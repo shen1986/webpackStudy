@@ -86,7 +86,7 @@ module.exports = {
             loader: "style-loader",
             //   option: '' 写成对象的好处是可以设置参数
             options: {
-              insertAt: "top" // 指定style插入的位置 这样不会覆盖你自己卸载html中的样式。
+              insertAt: "top" // 指定style插入的位置 这样不会覆盖你自己写在html中的样式。
             }
           },
           "css-loader"
@@ -101,7 +101,7 @@ module.exports = {
             loader: "style-loader",
             //   option: '' 写成对象的好处是可以设置参数
             options: {
-              insertAt: "top" // 指定style插入的位置 这样不会覆盖你自己卸载html中的样式。
+              insertAt: "top" // 指定style插入的位置 这样不会覆盖你自己写在html中的样式。
             }
           },
           "css-loader",
