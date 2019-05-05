@@ -5,63 +5,58 @@
  */
 let path = require("path");
 let HtmlWebpackPlugin = require("html-webpack-plugin");
+// 抽离css样式
+let MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// 用来压缩分离出来的css样式
+let OptimizeCss =  require('optimize-css-assets-webpack-plugin');
+// 用来压缩js
+let UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
-  mode: "development",
+  optimization: {
+    // 优化项
+    minimizer: [
+      new OptimizeCss(),
+      new UglifyJsPlugin({
+        cache: true, // 是否用缓存
+        parallel: true, // 并发打包
+        sourceMap: true // es6 -> es5 转换时会用到
+      })
+    ]
+  },
+  mode: "production",
   entry: "./src/index.js",
   output: {
-    path: path.resolve(__dirname, "./dist"),
+    path: path.resolve(__dirname, "dist"),
     filename: "bunde.[hash:8].js"
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html",
-      filename: "index.html",
-      minify: {
-        removeAttributeQuotes: true,
-        collapseWhitespace: true
-      },
-      hash: true
+      filename: "index.html"
+    }),
+    new MiniCssExtractPlugin({
+      filename: "main.css" // 抽离出来样式的名字
     })
   ],
   module: {
-    // 用来导入模块
     rules: [
-      // 规则   css-loader 接续 @import这种语法的
-      // style-loader 他是把css 插入到head的标签中
-      // loader的特点 希望单一
-      // loader的用法 字符串只用一个loader
-      // 多个loader需要[]
-      // loader的处理顺序默认是从右向左执行 或则 从下到上执行。
-      // loader还可以写成 对象方式
-      // { test: /\.css$/, use: ['style-loader','css-loader'] }
       {
         test: /\.css$/,
         use: [
-          {
-            loader: "style-loader",
-            //   option: '' 写成对象的好处是可以设置参数
-            options: {
-              insertAt: "top" // 指定style插入的位置 这样不会覆盖你自己卸载html中的样式。
-            }
-          },
-          "css-loader"
+          MiniCssExtractPlugin.loader, // 创建link标签
+          "css-loader",
+          "postcss-loader" // 给style式样加上前缀
         ]
       },
       {
-        // 可以处理less文件 sass   node-sass sass-loader
-        // stylus stylus-loader
         test: /\.less$/,
         use: [
-          {
-            loader: "style-loader",
-            //   option: '' 写成对象的好处是可以设置参数
-            options: {
-              insertAt: "top" // 指定style插入的位置 这样不会覆盖你自己卸载html中的样式。
-            }
-          },
+          // 创建link标签, 名字一样是抽离成一个css文件，如果想不一样就要require多次，且要报名字定义成不一样
+          MiniCssExtractPlugin.loader,
           "css-loader",
-          "less-loader" // 把less -> css
+          "less-loader",
+          "postcss-loader"
         ]
       }
     ]

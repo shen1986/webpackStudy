@@ -111,3 +111,74 @@ module.exports = {
     ]
   }
 ```
+
+## 笔记3
+- 笔记2的方法只能把css样式设置到header里面，使用`mini-css-extract-plugin`能把css样式抽离出来
+- 抽离出来以后通过`MiniCssExtractPlugin.loader`给html添加link标签
+- 如果想要给动画加上前缀，要引入第三方插件`autoprefixer`,而这个插件要通过`postcss-loader`来导入
+- 但是想要把css样式压缩必须配置优化项 
+    + 导入`optimize-css-assets-webpack-plugin` 来压缩 css 文件
+    + 导入`uglifyjs-webpack-plugin` 来压缩 js 文件
+```javascript
+
+// 抽离css样式
+let MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// 用来压缩分离出来的css样式
+let OptimizeCss =  require('optimize-css-assets-webpack-plugin');
+// 用来压缩js
+let UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
+module.exports = {
+  optimization: {
+    // 优化项
+    minimizer: [
+      new OptimizeCss(), // 压缩css文件
+      new UglifyJsPlugin({
+        cache: true, // 是否用缓存
+        parallel: true, // 并发打包
+        sourceMap: true // es6 -> es5 转换时会用到
+      })
+    ]
+  },
+
+  // 中间省略。。。。
+
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      filename: "index.html"
+    }),
+    new MiniCssExtractPlugin({
+      filename: "main.css" // 抽离出来样式的名字
+    })
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          //   {   这段代码会把样式放到header里面，如果要抽离css，不能用它
+          //     loader: "style-loader",
+          //     options: {
+          //       insertAt: "top"
+          //     }
+          //   },
+          MiniCssExtractPlugin.loader, // 创建link标签
+          "css-loader",
+          "postcss-loader" // 给style式样加上前缀
+        ]
+      },
+      {
+        test: /\.less$/,
+        use: [
+          // 创建link标签, 名字一样是抽离成一个css文件，如果想不一样就要require多次，且要报名字定义成不一样
+          MiniCssExtractPlugin.loader,
+          "css-loader",
+          "less-loader",
+          "postcss-loader"
+        ]
+      }
+    ]
+  }
+};
+```
