@@ -182,3 +182,11 @@ module.exports = {
   }
 };
 ```
+
+## 笔记4
+- 使用babel把 es6 转化为 es5
+- `npm i babel-loader @babel/core @babel/preset-env -D`
+- @babel/preset-env 就是用来转换所有语法的。
+- `npm i @babel/plugin-proposal-class-properties -D`用来支持es7的class语法
+- `decorators-legacy` 用来支持装饰器
+- 东西太多了，想用什么就去babel官网上查找。 https://babeljs.io
