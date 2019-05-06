@@ -4,6 +4,7 @@
  * @Date: 2019-04-30 12:26:54
  */
 console.log("niasd");
+require('./a');
 
 require('./index.css');
 
@@ -22,3 +23,7 @@ class A { // new A() a = 1
 
 let a = new A();
 console.log(a.a);
+
+function log(target){
+    console.log(target);
+}

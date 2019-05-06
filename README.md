@@ -189,4 +189,66 @@ module.exports = {
 - @babel/preset-env 就是用来转换所有语法的。
 - `npm i @babel/plugin-proposal-class-properties -D`用来支持es7的class语法
 - `decorators-legacy` 用来支持装饰器
-- 东西太多了，想用什么就去babel官网上查找。 https://babeljs.io
+- 东西太多了，想用什么就去babel官网上查找。 [babeljs](https://babeljs.io) `@babel/plugin-proposal-decorators`
+```javascript
+
+/*
+ * @Description: webpack配置
+ * @Author: shenxf
+ * @Date: 2019-04-30 12:26:38
+ */
+    rules: [
+      {
+        test: /\.js$/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            // 用babel-loader 需要把es6-es5
+            presets: [
+              // 预设置，用来配置插件库 ，大插件的配置
+              "@babel/preset-env"
+            ],
+            plugins: [
+              // 小插件在这里配置
+              ["@babel/plugin-proposal-decorators", { legacy: true }],
+              ["@babel/plugin-proposal-class-properties", { loose: true }]
+            ]
+          }
+        }
+      }
+```
+
+## 笔记5
+- `@babel/plugin-transform-runtime` 支持promise以及yield等高级的函数
+- 需要组合`@babel/runtime`一起使用。 不能-D
+- 如果用到更高级的语法要安装 `@babel/polyfill` 不能-D
+- 用`eslint`来校验代码是否规范 [eslint](https://eslint.org)
+```javascript
+      {
+        test: /\.js$/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+            plugins: [
+              ["@babel/plugin-proposal-decorators", { legacy: true }],
+              ["@babel/plugin-proposal-class-properties", { loose: true }],
+              "@babel/plugin-transform-runtime"
+            ]
+          }
+        },
+        include: path.resolve(__dirname, 'src'), // 找哪个文件夹下面的代码
+        exclude: /node_modules/  // 必须排除掉不然会报错。
+      },
+
+
+    {
+        test: /\.js$/,
+        use: {
+            loader: "eslint-loader",
+            options: {
+                enforce:'pre' // 强制最先执行 post-最后执行
+            }
+        }
+    },
+```

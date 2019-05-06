@@ -37,30 +37,23 @@ module.exports = {
   ],
   module: {
     rules: [
-        // {
-        //     test: /\.js$/,
-        //     use: {
-        //         loader: "eslint-loader",
-        //         options: {
-        //             enforce:'pre' // 强制最先执行 post-最后执行
-        //         }
-        //     }
-        // },
       {
         test: /\.js$/,
         use: {
           loader: "babel-loader",
           options: {
-            presets: ["@babel/preset-env"],
+            // 用babel-loader 需要把es6-es5
+            presets: [
+              // 预设置，用来配置插件库 ，大插件的配置
+              "@babel/preset-env"
+            ],
             plugins: [
+              // 小插件在这里配置
               ["@babel/plugin-proposal-decorators", { legacy: true }],
-              ["@babel/plugin-proposal-class-properties", { loose: true }],
-              "@babel/plugin-transform-runtime"
+              ["@babel/plugin-proposal-class-properties", { loose: true }]
             ]
           }
-        },
-        include: path.resolve(__dirname, 'src'), // 找哪个文件夹下面的代码
-        exclude: /node_modules/  // 必须排除掉不然会报错。
+        }
       },
       {
         test: /\.css$/,
