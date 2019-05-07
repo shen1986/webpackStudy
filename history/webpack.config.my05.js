@@ -8,7 +8,6 @@ let HtmlWebpackPlugin = require("html-webpack-plugin");
 let MiniCssExtractPlugin = require("mini-css-extract-plugin");
 let OptimizeCss = require("optimize-css-assets-webpack-plugin");
 let UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-let webpack = require('webpack');
 
 module.exports = {
   optimization: {
@@ -34,21 +33,19 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: "main.css"
-    }),
-    new webpack.ProvidePlugin({
-      // 提供插件，自动把jquery注入到所有模块
-      $: "jquery"
     })
   ],
-  externals: { // 这个模块是外部导入的它并不需要被打包。
-      jquery:'$'
-  },
   module: {
     rules: [
-      //   {
-      //     test: require.resolve("jquery"), // 当代码里面require了jquery
-      //     use: "expose-loader?$" // 在这里写内联的暴露给全局
-      //   },
+        // {
+        //     test: /\.js$/,
+        //     use: {
+        //         loader: "eslint-loader",
+        //         options: {
+        //             enforce:'pre' // 强制最先执行 post-最后执行
+        //         }
+        //     }
+        // },
       {
         test: /\.js$/,
         use: {
@@ -62,8 +59,8 @@ module.exports = {
             ]
           }
         },
-        include: path.resolve(__dirname, "src"),
-        exclude: /node_modules/
+        include: path.resolve(__dirname, 'src'), // 找哪个文件夹下面的代码
+        exclude: /node_modules/  // 必须排除掉不然会报错。
       },
       {
         test: /\.css$/,

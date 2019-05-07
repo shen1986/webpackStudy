@@ -252,3 +252,37 @@ module.exports = {
         }
     },
 ```
+
+## 笔记6
+- 第三方插件的使用
+- 1.expose-loader 暴露到window上
+- 2.providePlugin 给每个人提供一个$
+- 3.引入不打包
+```javascript
+// 通过expose-loader暴露给全局
+import $ from 'expose-loader?$jquery';
+console.log(window.$);
+
+// 在rule里面配置jquery暴露给全局
+{
+test: require.resolve("jquery"), // 当代码里面require了jquery
+use: "expose-loader?$" // 在这里写内联的暴露给全局
+},
+
+// 使用providePlugin，自动把jquery注入到所有模块
+new webpack.ProvidePlugin({
+    // 提供插件，自动把jquery注入到所有模块
+    $: "jquery"
+})
+
+// 在主html中加入cdn连接
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+console.log(window.$);
+
+// 但是这样的话就不需要打包下面这段代码，所有需要在webpack里面配置忽略打包，不import也不会打包
+import $ from 'jquery';
+
+externals: { // 这个模块是外部导入的它并不需要被打包。
+    jquery:'$'
+},
+```
