@@ -286,3 +286,38 @@ externals: { // 这个模块是外部导入的它并不需要被打包。
     jquery:'$'
 },
 ```
+
+## 笔记7
+- 图片处理
+- `npm i file-loader -D` 用来load图片。
+    + file-loader 默认会在内部生成一张图片 到build目录下
+    + 把生成的图片的名字返回回来
+- `npm i html-withimg-loader -D`
+    + 解决在html里面直接引用图片
+- `npm i url-loader -D` 
+    + 在图片引用之前，把图片变成base64码。
+    + 可以做一个限制，当我们的图片小于多少k的时候 用base64来转化，大于的时候直接用file-loader来解析。
+
+```javascript
+      {
+        test: /\.html$/, // 用来解析在html中的图片
+        use: "html-withimg-loader"
+      },
+
+
+      {
+          test: /\.(png|jpg|gif)$/, // 用来解析图片
+          use: 'file-loader'
+      },
+
+      
+      {
+          test: /\.(png|jpg|gif)$/, // 用来解析图片
+          use: {
+            loader: 'url-loader',
+            options: {
+                limit: 1 // 200k大小限制
+            }
+          }
+      },
+```
