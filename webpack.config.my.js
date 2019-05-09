@@ -25,7 +25,8 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "bunde.[hash:8].js"
+    filename: "bunde.[hash:8].js",
+    // publicPath: 'http://www.shenxf.com/' // 统一的在资源头上加上这个字符串,最后一个斜杠要加
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -33,7 +34,8 @@ module.exports = {
       filename: "index.html"
     }),
     new MiniCssExtractPlugin({
-      filename: "main.css"
+    //   filename: "main.css"
+        filename: 'css/main.css' // 把css放到css目录下
     }),
     new webpack.ProvidePlugin({
       $: "jquery"
@@ -45,19 +47,18 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.html$/, // 用来解析在html中的图片
+        test: /\.html$/,
         use: "html-withimg-loader"
       },
-      // {
-      //     test: /\.(png|jpg|gif)$/, // 用来解析图片
-      //     use: 'file-loader'
-      // },
       {
-          test: /\.(png|jpg|gif)$/, // 用来解析图片
+          test: /\.(png|jpg|gif)$/,
           use: {
             loader: 'url-loader',
             options: {
-                limit: 1 // 200k大小限制
+                limit: 1,
+                outputPath: '/img/', // 输出的路径
+                // 对某一个样式实现cdn
+                publicPath: 'http://www.shenxf.com' // 写在这里只处理图片的路径
             }
           }
       },

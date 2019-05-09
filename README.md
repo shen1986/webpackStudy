@@ -299,6 +299,18 @@ externals: { // 这个模块是外部导入的它并不需要被打包。
     + 可以做一个限制，当我们的图片小于多少k的时候 用base64来转化，大于的时候直接用file-loader来解析。
 
 ```javascript
+// webpack打包我们的图片
+// 1) 在js中创建图片来引入
+// 2) 在css引入 background('url')
+// 3) <img src="" />
+
+import logo from './404.png'; // 把图片引入， 返回的结果是一个新的图片
+let image = new Image();
+console.log(logo);
+// image.src = './404.png'; // 就是一个普通的字符串
+image.src = logo; // 引入图片
+document.body.appendChild(image);
+
       {
         test: /\.html$/, // 用来解析在html中的图片
         use: "html-withimg-loader"
@@ -320,4 +332,53 @@ externals: { // 这个模块是外部导入的它并不需要被打包。
             }
           }
       },
+```
+
+## 笔记8
+- 文件压缩好后怎么分类放在不同的文件夹下。
+    + 通过自`options`里面指定`outputPath`
+    + plugin的filename 里面加上文件夹路径
+```javascript
+    {
+        test: /\.(png|jpg|gif)$/,
+        use: {
+        loader: 'url-loader',
+        options: {
+            limit: 1,
+            outputPath: '/img/', // 输出的路径
+            }
+        }
+    }
+
+    new MiniCssExtractPlugin({
+    //   filename: "main.css"
+        filename: 'css/main.css' // 把css放到css目录下
+    }),
+```
+
+- 怎么在所有资源前面加上一个域名（cdn服务器）
+    + 在全局配置里面加上`outputPath`
+```javascript
+  entry: "./src/index.js",
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "bunde.[hash:8].js",
+    publicPath: 'http://www.shenxf.com/' // 统一的在资源头上加上这个字符串,最后一个斜杠要加
+  },
+```
+
+- 只对某一种资源局部加上域名
+```javascript
+    {
+        test: /\.(png|jpg|gif)$/,
+        use: {
+        loader: 'url-loader',
+        options: {
+            limit: 1,
+            outputPath: '/img/',
+            // 对某一个样式实现cdn
+            publicPath: 'http://www.shenxf.com' // 写在这里只处理图片的路径
+            }
+        }
+    }
 ```
