@@ -382,3 +382,37 @@ document.body.appendChild(image);
         }
     }
 ```
+
+
+## 笔记9
+- 多页应用
+
+```javascript
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+module.exports = {
+  mode: "development",
+  // 多入口,写成对象的形式
+  entry: {
+    home: "./src/index.js",
+    other: "./src/other.js"
+  },
+  output: {
+    // [name] home , other
+    filename: "[name].js", // 文件名根据入口名字决定，不这么写会报错
+    path: path.resolve(__dirname, "dist")
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      filename: "home.html",
+      chunks: ["home"] // 指定装哪个js文件
+    }),
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      filename: "other.html",
+      chunks: ["other",'home']  // 指定装哪个js文件
+    })
+  ]
+};
+```
