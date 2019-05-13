@@ -1,6 +1,9 @@
-/*
- * @Description: 
- * @Author: shenxf
- * @Date: 2019-04-30 12:26:54
- */
-console.log('index');
+console.log('home11');
+
+class Log {
+    constructor() {
+        console.lo('出错了');
+    }
+}
+
+let log = new Log();
