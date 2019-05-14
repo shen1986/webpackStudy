@@ -116,6 +116,16 @@ module.exports = {
 - 笔记2的方法只能把css样式设置到header里面，使用`mini-css-extract-plugin`能把css样式抽离出来
 - 抽离出来以后通过`MiniCssExtractPlugin.loader`给html添加link标签
 - 如果想要给动画加上前缀，要引入第三方插件`autoprefixer`,而这个插件要通过`postcss-loader`来导入
+    + postcss-loader 是通过 postcss.config.js 这里文件里面配置来运行来的
+    ```javascript
+    // postcss.config.js例子
+    module.exports = {
+        plugins: [
+            require('precss'),
+            require('autoprefixer')
+        ] // 导入加前缀的插件
+    }
+    ```
 - 但是想要把css样式压缩必须配置优化项 
     + 导入`optimize-css-assets-webpack-plugin` 来压缩 css 文件
     + 导入`uglifyjs-webpack-plugin` 来压缩 js 文件
