@@ -476,3 +476,55 @@ const webpack = require('webpack');
   ]
 
 ```
+
+## 笔记13
+- 跨域问题
+    1. 通过代理来运行服务端程序
+    ```javascript
+     // 设置方法1
+     proxy: {
+         '/api': 'http://localhost:3000' // 设置代理
+     }
+     // 设置方法2
+     proxy: {
+       "/api": {
+         target: "http://localhost:3000",
+         pathRewrite: {'/api': ''} // 把api替换成空  // 重写的方式
+       }
+     }
+    ```
+    2. 通过webpack内置的express
+    ```javascript
+    devServer: {
+        before(app){
+            app.get('/user', (req, res) => {
+                res.json({name: '小沈架构2'})
+            });
+        }
+    },
+    ```
+    3. 有服务端 不用用代理处理 能不能在服务端里面直接运行webpack
+    - 需要安装中间件 `npm i webpack-dev-middleware -D`
+    - 这个时候只要运行服务端就可以，不需要运行 webpack-dev-server
+    ```javascript
+    let express = require('express');
+    let app = express();
+    let webpack = require('webpack');
+
+    // 中间件
+    let middle = require('webpack-dev-middleware');
+
+    let config = require('./webpack.config.my');
+
+    let compiler = webpack(config);
+
+    app.use(middle(compiler));
+
+    app.get('/user', (req, res) => {
+        res.json({name: '小沈架构1'})
+    });
+
+    app.listen(3000, function(){
+        console.log('3000端口已经启动了！');
+    })
+    ```
