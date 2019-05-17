@@ -528,3 +528,58 @@ const webpack = require('webpack');
         console.log('3000端口已经启动了！');
     })
     ```
+## 笔记14
+- resolve属性的配置
+- resolve 主要是用来帮助我们导入node_modules下面的第三方包的。
+```javascript
+    // 解析 第三方包 common
+    resolve: {
+        // 指定查找第三方包的目录 就在当前目录的node_modules里面找
+        modules: [path.resolve("node_modules")], 
+    },
+```
+
+```javascript
+// 本来的导包方法
+import 'bootstrap/dist/css/bootstrap.css';
+
+// 加入别名之后的导包方法
+import 'bootstrap';
+// webpack 配置
+resolve: {
+    alias: {
+      // 别名
+      bootstrap: "bootstrap/dist/css/bootstrap.css"
+    }
+}
+```
+
+```javascript
+// 指定package.json包里面的查找顺序
+
+// 和上面同样的写法，一样有效首先引入style
+import 'bootstrap';
+
+// webpack 配置
+resolve: {
+    mainFields: ["style", "main"], // 先找style 再找 main
+}
+
+// 还可以直接指定入口文件
+resolve: {
+    mainFiles: ['index.js'] // 入口文件的名字 index.js
+}
+
+// 当没写扩展名的时候，自动添加扩展名
+
+// 本来的写法
+import 'style.css';
+
+// 加入下面配置的写法
+import 'style';
+
+resolve: {
+    // 当没写扩展名的时候，自动添加扩展名,顺序是从左向右->
+    extensions: [".css", ".js", ".json"] 
+}
+```

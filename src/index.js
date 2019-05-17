@@ -1,3 +1,5 @@
+import 'bootstrap';
+import './index';
 let xhr = new XMLHttpRequest();
 
 // http://localhost:8080  webpack-dev-server的服务 -> 3000
