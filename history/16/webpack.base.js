@@ -1,9 +1,8 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
-  mode: "production",
   entry: {
     home: "./src/index.js"
   },
@@ -34,9 +33,9 @@ module.exports = {
       filename: "index.html"
     }),
     new webpack.DefinePlugin({
-        DEV:JSON.stringify('prod'), // string类型要使用JSON.stringify
-        FLAG: 'true',                // 布尔类型直接使用就可以了。
-        EXPORESSION: '1+1'          // 2
+      DEV: JSON.stringify("prod"), // string类型要使用JSON.stringify
+      FLAG: "true", // 布尔类型直接使用就可以了。
+      EXPORESSION: "1+1" // 2
     })
   ]
 };

@@ -583,3 +583,39 @@ resolve: {
     extensions: [".css", ".js", ".json"] 
 }
 ```
+
+## 笔记15
+- 定义环境变量
+- 使用webpack自带的DefinePlugin来定义
+
+```javascript
+    // 使用
+    let url = '';
+    if (DEV === 'dev') {
+        url = 'http://localhost:3000'
+    } else {
+        url = 'http://www.zhufengpeixun.com'
+    }
+
+    // 在webpack中定义环境变量
+    new webpack.DefinePlugin({
+        DEV:JSON.stringify('prod'), // string类型要使用JSON.stringify
+        FLAG: 'true',                // 布尔类型直接使用就可以了。
+        EXPORESSION: '1+1'          // 2
+    })
+```
+
+## 笔记16
+- 区分不同的环境
+
+- 分多个配置文件，一个base（基础文件），prod（生产），dev（开发）文件。
+- 需要安装第三方插件 `webpack-merge`
+
+```javascript
+let { smart } = require("webpack-merge");
+let base = require("./webpack.base.js");
+
+module.experts = smart(base, {
+  mode: "development"
+});
+```
