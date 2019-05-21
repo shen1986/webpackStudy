@@ -31,6 +31,6 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './public/index.html'
         }),
-        new webpack.IgnorePlugin(/\.\/local/, /moment/), // 排除moment 里面的 ./local 这个包
+        new webpack.IgnorePlugin(/\.\/local/,/moment/),
     ]
 };

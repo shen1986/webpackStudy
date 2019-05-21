@@ -619,3 +619,86 @@ module.experts = smart(base, {
   mode: "development"
 });
 ```
+
+## 笔记17
+- noParse
+- 如果某个公共的包是一个单独的模块，但是webpack并不知道，他会去解析这个包，查看里面是否有别的依赖
+- 这样会占用编译的时间。
+- 使用 noParse 可以告诉webpack这是一个独立包，webpack会单纯的去引入，而不解析。
+
+```javascript
+let path = require('path');
+let HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+    mode: 'development',
+    entry: './src/index.js',
+    module: {
+        noParse: /jquery/, // 不去解析这个包中有没有别的依赖（单独的模块用这个可以提高编译速度）
+        rules: [
+            {test:/\.js$/, use: {
+                loader: 'baber-loader',
+                options: {
+                    presets: [
+                        '@babel/preset-env',
+                        '@babel/preset-react'
+                    ]
+                }
+            }}
+        ]
+    },
+    output: {
+        filename: 'bundle.js',
+        path: path.resolve()
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './public/index.html'
+        })
+    ]
+};
+
+```
+
+## 笔记18
+- IgnorePlugin
+- 有的时候匹配规则会去查找不必要的文件夹，这个使用排除某个文件夹或则指定查找文件来，规避这个问题
+```javascript
+        rules: [
+            {
+                test:/\.js$/, 
+                exclude: /node_modules/,  // 排除某个包
+                include: path.resolve('src'), // 只看这个包里面是否满足规则
+                use: {
+                    loader: 'baber-loader',
+                    options: {
+                        presets: [
+                            '@babel/preset-env',
+                            '@babel/preset-react'
+                        ]
+                    }
+                }
+            }
+        ]
+```
+- 有的时候第三方的库会引入很多的包，这些包可能不是自己都要用的
+- 比如 moment 在这个包，里面有很多的语言，但是我们只要用到里面中文的语言就行了。
+
+```javascript
+import moment from 'moment';
+// 因为语言被排除了，使用的时候自己手动引入。
+import 'moment/locale/zh-cn';
+
+moment.locale("zh-cn");
+let r = moment().endOf('day').fromNow();
+
+console.log(r);
+
+// webpack配置
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './public/index.html'
+        }),
+        new webpack.IgnorePlugin(/\.\/local/, /moment/), // 排除moment 里面的 ./local 这个包
+    ]
+```
