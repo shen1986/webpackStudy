@@ -702,3 +702,38 @@ console.log(r);
         new webpack.IgnorePlugin(/\.\/local/, /moment/), // 排除moment 里面的 ./local 这个包
     ]
 ```
+
+## 笔记19
+- dllPlugin 动态链接库
+- 第三方的资源可以单独打成一个dll的包，这样不会占用，自己程序的资源
+```javascript
+// 把react，react-dom打包成公共的第三方文件。
+let path = require("path");
+let webpack = require("webpack");
+module.exports = {
+  mode: "production",
+  entry: {
+    react: ["react", "react-dom"]
+  },
+  output: {
+    filename: "_dll_[name].js", // 产生的文件名
+    path: path.resolve(__dirname, "dist"),
+    library: "_dll_[name]" // _dll_react
+  },
+  plugins: [
+    new webpack.DllPlugin({
+      name: "_dll_[name]", // name== library
+      path: path.resolve(__dirname, "dist", "manifest.json")
+    })
+  ]
+};
+```
+
+```javascript
+// 导入第三方文件
+    plugins: [
+        new webpack.DllReferencePlugin({
+            manifest: path.resolve(__dirname, 'dist', 'manifest.json')
+        }),
+    ]
+```
