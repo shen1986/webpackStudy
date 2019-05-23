@@ -737,3 +737,43 @@ module.exports = {
         }),
     ]
 ```
+
+## 笔记20
+- happypack 多线程打包 提高打包效率
+- 项目比较大，打包时间长的时候使用。
+
+```javascript
+// 引入happypack
+let Happypack = require('happypack');
+module.exports = {
+    module: {
+        noParse: /jquery/,
+        rules: [
+            {
+                test:/\.js$/, 
+                exclude: /node_modules/,
+                include: path.resolve('src'),
+                use: 'Happypack/loader?id=js' // 指定happypack多线程打包，这里的id必须与plugins中的id对应
+            }
+        ]
+    },
+
+    plugins: [
+        new Happypack({
+            id: 'js', // 对应的id 启动多线程， 使用下面的loader进行打包。
+            use: [ // 这个use必须是个数组。
+                {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [
+                            '@babel/preset-env',
+                            '@babel/preset-react'
+                        ]
+                    }
+                }
+            ]
+        }),
+    ]
+};
+
+```
