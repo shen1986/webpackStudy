@@ -777,3 +777,6 @@ module.exports = {
 };
 
 ```
+
+## 笔记21
+- webpack 自带优化
