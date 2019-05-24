@@ -785,7 +785,7 @@ module.exports = {
 - `tree-shaking`优化功能。
     + 用import语法打包，webpack会自动把里面没有用到的代码排除掉
     + 注意：用require语法打包的情况不会帮我们优化代码。
-    ```javascript
+    ```javascript 
     // a.js
     export const add = function (a, b) {
         return a + b;
