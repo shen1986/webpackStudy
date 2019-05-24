@@ -779,4 +779,36 @@ module.exports = {
 ```
 
 ## 笔记21
-- webpack 自带优化
+- webpack 自带优化 ，好像在3.0以后的版本才有这种内部优化。
+
+- 这里主要描述下就行了，自带优化只在production模式下生效。
+- `tree-shaking`优化功能。
+    + 用import语法打包，webpack会自动把里面没有用到的代码排除掉
+    + 注意：用require语法打包的情况不会帮我们优化代码。
+    ```javascript
+    // a.js
+    export const add = function (a, b) {
+        return a + b;
+    }
+
+    export const minus = function (a, b) {
+        return a - b;
+    }
+
+    // b.js 这个时候webpack 只会打包 a.js 里面的 add 方法。
+    import a from 'a.js';
+
+    console.log(a.add(1,2));
+    ```
+- 变量作用域升级
+    + 很多无用的变量声明，在webpack打包的时候会自动帮我优化
+    ```javascript
+    // 这里有很多的无用的声明，会占用一些内存空间
+    let a = 1;
+    let b = 2;
+    let c = 3;
+    console.log(a + b + c);
+
+    // webpack 发现上面类似的代码，会自动帮我们优化
+    console.log(6);
+    ```
