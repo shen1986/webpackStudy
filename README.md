@@ -812,3 +812,31 @@ module.exports = {
     // webpack 发现上面类似的代码，会自动帮我们优化
     console.log(6);
     ```
+
+## 笔记22
+- 抽离公共代码
+- webpack4自带的功能，把共通的代码抽离出来
+
+```javascript
+optimization: {
+    // 分割代码块
+    splitChunks: {
+      // 缓存组
+      cacheGroups: {
+        common: {
+          // 公共的模块
+          chunks: "initial",
+          minSize: 0,
+          minChunks: 2
+        },
+        vendor: { // 抽离第三方代码
+          priority: 1, // 权重为1 优先抽离
+          test: /node_modules/, // 把node_modules中的代码抽离出来
+          chunks: "initial", // 指定入口
+          minSize: 0, // 公共代码部分大小超过 0 就抽离
+          minChunks: 2 // 入口数量，现在这个webpack 有2个入口所以是2
+        }
+      }
+    }
+}
+```

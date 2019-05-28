@@ -1,5 +1,8 @@
-import React from 'react';
-import {render} from 'react-dom';
+import './a';
+import './b';
+import './c';
 
-console.log(document.getElementById("root"));
-render(<h1>123</h1>,document.getElementById('root'));
+console.log("index");
+
+import $ from "jquery";
+console.log($);
