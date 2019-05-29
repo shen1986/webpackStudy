@@ -840,3 +840,19 @@ optimization: {
     }
 }
 ```
+
+## 笔记23
+- 懒加载
+- 在没有执行到这个文件之前，不起加载（不去下载相关的资源）
+```javascript
+let button = document.createElement('button');
+button.innerHTML = 'hello';
+button.addEventListener('click', function() {
+    // es6草案中的语法 jsonp实现动态加载文件 在vue ， react 有对应的运用。
+    import('./source.js').then(data => {
+        console.log(data);
+    })
+});
+document.body.appendChild(button);
+```
+- 需要安装这个模块 `npm i @babel/plugin-syntax-dynamic-import -D`
