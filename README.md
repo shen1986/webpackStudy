@@ -856,3 +856,38 @@ button.addEventListener('click', function() {
 document.body.appendChild(button);
 ```
 - 需要安装这个模块 `npm i @babel/plugin-syntax-dynamic-import -D`
+
+## 笔记24
+- 热更新
+- 当有文件变更，不要刷新整个页面，而是增量的去更新。
+```javascript
+// webpack配置
+  devServer: {
+    port: 3000,
+    open: true,
+    contentBase: "./dist",
+    hot: true // 开启热更新
+  },
+
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./public/index.html"
+    }),
+    new webpack.NamedModulesPlugin(), // 打印更新的模块路劲
+    new webpack.HotModuleReplacementPlugin() // 热更新插件
+  ]
+
+// 但是仅仅配置webpack还不起作用
+
+import str from './source';
+console.log(str);
+
+// 热更新处理逻辑，用这个逻辑，不会重新刷新服务器。
+if (module.hot) {
+    module.hot.accept('./source.js', () => {
+        let str = require('./source');
+        console.log(str);
+    });
+}
+```
+
