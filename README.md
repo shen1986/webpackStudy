@@ -891,3 +891,66 @@ if (module.hot) {
 }
 ```
 
+## 笔记25
+- tapable 这个是webpack的内部原理，为后面的webpack 手写做准备。 可以注册事件，调用事件
+
+- tapable的使用方法
+```javascript
+// webpack 内部的核心模块
+let {SyncHook} = require('tapable');
+
+class Lesson {
+    constructor() {
+        this.hooks = {
+            arch: new SyncHook(['name']) // 注册一个同步钩子，有一个参数 name
+        }
+    }
+    // 注册2个事件
+    tap() {
+        this.hooks.arch.tap('node', function(name) {
+            console.log('node', name);
+        });
+        this.hooks.arch.tap('react', function(name) {
+            console.log("react", name);
+        });
+    }
+    // 启动所有事件
+    start() {
+        this.hooks.arch.call('jw');
+    }
+    
+}
+
+let l = new Lesson();
+l.tap(); // 注册事件
+l.start(); // 启动钩子
+```
+
+- tapable的内部原理
+```javascript
+// tapable 的内部实现原理
+class SyncHook {
+    constructor(args) {
+        this.tasks = [];
+    }
+    tap(name, task) {
+        this.tasks.push(task);
+    }
+    call(...args) {
+        this.tasks.forEach(task => {
+            task(...args);
+        })
+    }
+    
+}
+
+let hook = new SyncHook(['name']);
+hook.tap('react', function(name) {
+    console.log('react', name);
+})
+hook.tap("node", function(name) {
+  console.log("node", name);
+});
+
+hook.call('jw');
+```
