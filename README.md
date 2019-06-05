@@ -954,3 +954,186 @@ hook.tap("node", function(name) {
 
 hook.call('jw');
 ```
+
+## 笔记26
+- tapable2 其他同步操作
+ 
+```javascript
+
+// 同步保险锁
+let { SyncBailHook } = require('tapable');
+
+class Lesson {
+    constructor() {
+        this.hooks = {
+          arch: new SyncBailHook(["name"])
+        };
+    }
+    tap() {
+        this.hooks.arch.tap('node', function(name) {
+            console.log('node', name);
+            // 当返回值不等于 undefined 下面的程序不继续执行。
+            return 'node 难学';
+        });
+        this.hooks.arch.tap('react', function(name) {
+            console.log("react", name);
+        });
+    }
+    start() {
+        this.hooks.arch.call('jw');
+    }
+    
+}
+
+let l = new Lesson();
+l.tap();
+l.start();
+
+// 同步瀑布锁，上一个执行的返回结果给下一个执行函数
+let { SyncWaterfallHook } = require('tapable');
+
+class Lesson {
+    constructor() {
+        this.hooks = {
+          arch: new SyncWaterfallHook(["name"])
+        };
+    }
+    tap() {
+        this.hooks.arch.tap('node', function(name) {
+            console.log('node', name);
+            // 返回值会作为下一个函数的参数
+            return 'node 必须';
+        });
+        this.hooks.arch.tap('react', function(data) {
+            console.log("react", data);
+        });
+    }
+    start() {
+        this.hooks.arch.call('jw');
+    }
+    
+}
+
+let l = new Lesson();
+l.tap();
+l.start();
+
+// 同步循环锁，可以指定某个函数执行的次数 不返回undefined就会继续执行
+let { SyncLoopHook } = require('tapable');
+
+class Lesson {
+    constructor() {
+        this.index = 0; // 定一个标记
+        this.hooks = {
+          arch: new SyncLoopHook(["name"])
+        };
+    }
+    tap() {
+        this.hooks.arch.tap('node', (name) => {
+            console.log('node', name);
+            return ++this.index === 3 ? undefined : "继续学";
+        });
+        this.hooks.arch.tap('react', (data) => {
+            console.log("react", data);
+        });
+    }
+    start() {
+        this.hooks.arch.call('jw');
+    }
+    
+}
+
+let l = new Lesson();
+l.tap();
+l.start();
+
+// ************内部实现原理**************
+
+// SyncBailHook 的内部实现原理
+class SyncBailHook {
+  constructor(args) {
+    this.tasks = [];
+  }
+  tap(name, task) {
+    this.tasks.push(task);
+  }
+  call(...args) {
+      var ret = undefined;
+      var index = 0;
+    do {
+        ret = this.tasks[index++](...args);
+    } while (ret === undefined && index < this.tasks.length);
+  }
+}
+
+let hook = new SyncBailHook(["name"]);
+hook.tap('react', function(name) {
+    console.log('react', name);
+    return 'react 难学';
+})
+hook.tap("node", function(name) {
+  console.log("node", name);
+});
+
+hook.call('jw');
+
+
+// SyncWaterfallHook 的内部实现原理
+class SyncWaterfallHook {
+  constructor(args) {
+    this.tasks = [];
+  }
+  tap(name, task) {
+    this.tasks.push(task);
+  }
+  call(...args) {
+    let [first, ...others] = this.tasks;
+    let ret = first(...args);
+    others.reduce((a,b) => {
+        b(a);
+    }, ret);
+  }
+}
+
+let hook = new SyncWaterfallHook(["name"]);
+hook.tap('react', function(name) {
+    console.log('react', name);
+    return 'react 难学';
+})
+hook.tap("node", function(data) {
+  console.log("node", data);
+});
+
+hook.call('jw');
+
+// SyncLoopHook 的内部实现原理
+class SyncLoopHook {
+  constructor(args) {
+    this.tasks = [];
+  }
+  tap(name, task) {
+    this.tasks.push(task);
+  }
+  call(...args) {
+    this.tasks.forEach(task => {
+        var ret = undefined;
+        do{
+            ret = task(...args);
+        }while(ret != undefined)
+        
+    })
+  }
+}
+
+let hook = new SyncLoopHook(["name"]);
+let total = 0;
+hook.tap('react', function(name) {
+    console.log('react', name);
+    return ++total === 3? undefined : '继续学';
+})
+hook.tap("node", function(data) {
+  console.log("node", data);
+});
+
+hook.call('jw');
+```
