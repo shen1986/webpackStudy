@@ -1137,3 +1137,171 @@ hook.tap("node", function(data) {
 
 hook.call('jw');
 ```
+
+## 笔记27
+- AsyncParallelHook 并发（串行， 并行）
+- Async 的用法
+```javascript
+// 异步并发
+let { AsyncParallelHook } = require("tapable");
+// 异步的钩子 （串行） 并行 需要等待所有并发的异步事件执行后再执行回调方法。
+// 注册方法分为三种 tap（同步注册） tapAsync（异步注册） Promise
+class Lesson {
+    constructor() {
+        this.hooks = {
+          arch: new AsyncParallelHook(["name"])
+        };
+    }
+    tap() {
+        this.hooks.arch.tapAsync('node', (name, cb) => {
+            setTimeout(function(){
+                console.log("node", name);
+                cb();
+            }, 1000);
+        });
+        this.hooks.arch.tapAsync("react", (name, cb) => {
+            setTimeout(function() {
+                console.log("react", name);
+                cb();
+            }, 1000);
+        });
+    }
+    start() {
+        this.hooks.arch.callAsync('jw', function() {
+            console.log('end');
+        });
+    }
+}
+
+let l = new Lesson();
+l.tap();
+l.start();
+```
+- Async 的内部原理
+```javascript
+// AsyncParallelHook 的内部实现原理
+class AsyncParallelHook {
+  constructor(args) {
+    this.tasks = [];
+  }
+  tapAsync(name, task) {
+    this.tasks.push(task);
+  }
+  callAsync(...args) {
+    let finalCallback = args.pop(); // 拿出最终的函数
+    let index = 0;
+    let done = () => {
+        index++;
+        if (index === this.tasks.length) {
+            finalCallback();
+        }
+    }
+
+    this.tasks.forEach(task => {
+        task(...args, done);
+    });
+  }
+}
+
+let hook = new AsyncParallelHook(["name"]);
+let total = 0;
+hook.tapAsync("react", function(name, cb) {
+    setTimeout(function() {
+        console.log("react", name);
+        cb();
+    }, 1000);
+});
+hook.tapAsync("node", function(name, cb) {
+    setTimeout(function() {
+        console.log("node", name);
+        cb();
+    }, 1000);
+});
+
+hook.callAsync("jw", function() {
+    console.log('end');
+});
+```
+- Promise 的用法
+```javascript
+// 异步并发
+let { AsyncParallelHook } = require("tapable");
+// 异步的钩子 （串行） 并行 需要等待所有并发的异步事件执行后再执行回调方法。
+// 注册方法分为三种 tap（同步注册） tapAsync（异步注册） Promise
+class Lesson {
+    constructor() {
+        this.hooks = {
+          arch: new AsyncParallelHook(["name"])
+        };
+    }
+    tap() {
+        this.hooks.arch.tapPromise('node', (name) => {
+            return new Promise((resolve, reject) => {
+                setTimeout(function() {
+                    console.log("node", name);
+                    resolve();
+                }, 1000);
+            });
+        });
+        this.hooks.arch.tapPromise("react", (name) => {
+            return new Promise((resolve, reject) => {
+                setTimeout(function() {
+                    console.log("react", name);
+                    resolve();
+                }, 1000);
+            });
+        });
+    }
+    start() {
+        this.hooks.arch.promise('jw').then(function() {
+            console.log('end');
+        });
+    }
+}
+
+let l = new Lesson();
+l.tap();
+l.start();
+```
+
+- Promise 的内部原理
+```javascript
+// AsyncParallelHook 的内部实现原理
+class AsyncParallelHook {
+  constructor(args) {
+    this.tasks = [];
+  }
+  tapPromise(name, task) {
+    this.tasks.push(task);
+  }
+  promise(...args) {
+    let promises = this.tasks.map(task => {
+        return task(...args);
+    });
+    return Promise.all(promises);
+  }
+}
+
+let hook = new AsyncParallelHook(["name"]);
+let total = 0;
+hook.tapPromise("react", function(name) {
+    return new Promise((reslove, reject) => {
+        setTimeout(function() {
+            console.log("react", name);
+            reslove();
+        }, 1000);
+    });
+});
+hook.tapPromise("node", function(name, cb) {
+    return new Promise((reslove, reject) => {
+        setTimeout(function() {
+            console.log("node", name);
+            reslove();
+        }, 1000);
+    });
+});
+
+hook.promise("jw").then(function() {
+    console.log("end");
+});
+```
