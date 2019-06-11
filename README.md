@@ -1305,3 +1305,6 @@ hook.promise("jw").then(function() {
     console.log("end");
 });
 ```
+
+## 笔记28
+- AsyncSeriesHook 异步串行 按顺序执行
