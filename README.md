@@ -1312,4 +1312,5 @@ hook.promise("jw").then(function() {
 
 ## 笔记29
 - AsyncSeriesWaterfallHook 异步串行瀑布钩子
+- 代码参照 history 29
 
