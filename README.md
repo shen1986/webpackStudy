@@ -1308,3 +1308,8 @@ hook.promise("jw").then(function() {
 
 ## 笔记28
 - AsyncSeriesHook 异步串行 按顺序执行
+- 代码参照 history 28
+
+## 笔记29
+- AsyncSeriesWaterfallHook 异步串行瀑布钩子
+
