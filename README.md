@@ -1321,3 +1321,7 @@ hook.promise("jw").then(function() {
 - 在 手写一个 npm 应用 npm link 到webpack-dev里面。
     + 在package.json里面配置 bin 属性， 然后通过 npm-link 挂载到全局。
     + 在`webpack-dev` 通过 npm-link shenxf-pack 执行挂载， 然后 通过 npx shenxf-pack 就能执行我的 npm 应用了。
+
+## 笔记31
+- webpack 分析及处理
+- 继续编写 shenxf-pack 包。
