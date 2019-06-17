@@ -1320,8 +1320,12 @@ hook.promise("jw").then(function() {
     + 查看生成的bundle文件，里面主要写了一个require函数，让后把require的内容作为参数传入，依次调用。
 - 在 手写一个 npm 应用 npm link 到webpack-dev里面。
     + 在package.json里面配置 bin 属性， 然后通过 npm-link 挂载到全局。
-    + 在`webpack-dev` 通过 npm-link shenxf-pack 执行挂载， 然后 通过 npx shenxf-pack 就能执行我的 npm 应用了。
+    + 在`webpack-dev` 通过 npm link shenxf-pack 执行挂载， 然后 通过 npx shenxf-pack 就能执行我的 npm 应用了。
 
 ## 笔记31
 - webpack 分析及处理
+- 继续编写 shenxf-pack 包。
+
+## 笔记32
+- 创建依赖关系
 - 继续编写 shenxf-pack 包。
