@@ -1329,3 +1329,8 @@ hook.promise("jw").then(function() {
 ## 笔记32
 - 创建依赖关系
 - 继续编写 shenxf-pack 包。
+
+## 笔记33
+- AST递归解析
+- 在shenxf-pack 里面安装` npm i babylon @babel/traverse @babel/types @babel/generator`
+- babylon的parse 方法查询 [ast](https://astexplorer.net/)
