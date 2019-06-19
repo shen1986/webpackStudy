@@ -1334,3 +1334,7 @@ hook.promise("jw").then(function() {
 - AST递归解析
 - 在shenxf-pack 里面安装` npm i babylon @babel/traverse @babel/types @babel/generator`
 - babylon的parse 方法查询 [ast](https://astexplorer.net/)
+
+## 笔记34
+- 生成打包结果
+- 加了一个ejs模板，并把之间的ast递归解析的内容放入模板里面。
