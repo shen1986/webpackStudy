@@ -1338,3 +1338,12 @@ hook.promise("jw").then(function() {
 ## 笔记34
 - 生成打包结果
 - 加了一个ejs模板，并把之间的ast递归解析的内容放入模板里面。
+
+## 笔记35
+- 手写loader功能
+- 在为webpack里面先写一个规则，然后写less-loader 和 style-loader 其实就是一个方法。
+- 然后修改 shenxf-pack
+
+## 笔记36
+- 增加plugins
+- 使用tapable，给pack的项目里面的各种处理挂上钩子。然后执行。

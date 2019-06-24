@@ -4,8 +4,7 @@ const babylon = require('babylon');
 const t = require('@babel/types');
 const traverse = require("@babel/traverse").default;
 const generator = require('@babel/generator').default;
-const ejs = require('ejs');
-const { SyncHook } = require('tapable');
+const ejs = require('ejs')
 // babylon 主要就是把源码 转换成ast
 // @babel/traverse
 // @babel/types
@@ -21,23 +20,6 @@ class Compiler {
     this.entry = config.entry; // 入口路径
     // 工作路径
     this.root = process.cwd();
-    this.hooks = {
-        entryOption: new SyncHook(),
-        compile: new SyncHook(),
-        afterCompile: new SyncHook(),
-        afterPlugins: new SyncHook(),
-        run: new SyncHook(),
-        emit: new SyncHook(),
-        done: new SyncHook()
-    };
-    // 如果传递了plugins参数
-    let plugins = this.config.plugins;
-    if (Array.isArray(plugins)) {
-        plugins.forEach(plugin => {
-            plugin.apply(this);
-        });
-    }
-    this.hooks.afterPlugins.call();
   }
   getSource(modulePath) { // index.less
     let rules = this.config.module.rules;
@@ -115,15 +97,11 @@ class Compiler {
     fs.writeFileSync(main, this.assets[main]);
   }
   run() {
-    this.hooks.run.call();
     // 执行 并且创建模块的依赖关系
-    this.hooks.compile.call();
     this.buildModule(path.resolve(this.root, this.entry), true);
-    this.hooks.afterCompile.call();
+
     // 发射一个文件 打包后的文件
     this.emitFile();
-    this.hooks.emit.call();
-    this.hooks.done.call();
   }
 }
 
