@@ -1347,3 +1347,7 @@ hook.promise("jw").then(function() {
 ## 笔记36
 - 增加plugins
 - 使用tapable，给pack的项目里面的各种处理挂上钩子。然后执行。
+
+## 笔记37
+- loader
+- loader 就是一个方法，有一个入参是source。然后返回一个source。
