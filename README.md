@@ -1351,3 +1351,7 @@ hook.promise("jw").then(function() {
 ## 笔记37
 - loader
 - loader 就是一个方法，有一个入参是source。然后返回一个source。
+
+## 笔记38
+- loader配置
+- 配置多个loader
