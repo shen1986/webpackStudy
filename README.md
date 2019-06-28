@@ -1355,3 +1355,8 @@ hook.promise("jw").then(function() {
 ## 笔记38
 - loader配置
 - 配置多个loader
+
+## 笔记39
+- babel-loader实现
+- 首先要安装 babel/Core 和 env, 自己写了babel-loader，记得要卸载之前安装babel-loader
+
