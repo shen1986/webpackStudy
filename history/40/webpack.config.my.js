@@ -13,18 +13,6 @@ module.exports = {
   watch: true,
   module: {
     rules: [
-        {
-            test: /\.jpg$/,
-            // 根据图片生成一个MD5挫 发射到dist目录下，file-loader返回当前的路径。
-            // use: 'file-loader'
-            // 会处理路径
-            use: {
-                loader: 'url-loader',
-                options: {
-                    limit: 200*1024
-                }
-            }
-        },
       {
         test: /\.js$/,
         use: {

@@ -1360,3 +1360,10 @@ hook.promise("jw").then(function() {
 - babel-loader实现
 - 首先要安装 babel/Core 和 env, 自己写了babel-loader，记得要卸载之前安装babel-loader
 
+## 笔记40
+- banner-loader实现
+- 自己写一个loader，熟悉里面使用的api
+
+## 笔记41
+- 实现file-loader和url-loader
+- npm i mime 获取文件的类型。
