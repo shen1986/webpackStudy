@@ -1367,3 +1367,6 @@ hook.promise("jw").then(function() {
 ## 笔记41
 - 实现file-loader和url-loader
 - npm i mime 获取文件的类型。
+
+## 笔记42
+- less-loader和css-loader
