@@ -1370,3 +1370,10 @@ hook.promise("jw").then(function() {
 
 ## 笔记42
 - less-loader和css-loader
+
+## 笔记43
+- css-loader 
+- 比较复杂，主要解决在.less文件里面的 url 如何加载。
+
+## 笔记44
+- webpack中的插件
