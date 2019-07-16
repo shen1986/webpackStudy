@@ -1377,3 +1377,6 @@ hook.promise("jw").then(function() {
 
 ## 笔记44
 - webpack中的插件
+
+## 笔记45
+- 文件列表插件
